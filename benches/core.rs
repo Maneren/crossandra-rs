@@ -87,16 +87,16 @@ pub fn samarium(c: &mut Criterion) {
         ("z", "><"),
     ];
     let patterns = [
-        common::DOUBLE_QUOTED_STRING.clone(),
-        ("number".into(), r"[\\/]+`?[\\/]*|`[\\/]*".into()),
-        ("block_comment".into(), r"==<.*>==".into()),
-        ("line_comment".into(), r"==[^\n]*".into()),
-        ("variable".into(), r"\w+".into()),
+        *common::DOUBLE_QUOTED_STRING,
+        ("number", r"[\\/]+`?[\\/]*|`[\\/]*"),
+        ("block_comment", r"==<[^>]*>=="),
+        ("line_comment", r"==[^\n]*"),
+        ("variable", r"\w+"),
     ];
     let tok = Tokenizer::default()
         .with_literals(&literals)
         .unwrap()
-        .with_patterns(patterns.into())
+        .with_patterns(&patterns)
         .unwrap()
         .with_ignore_whitespace(true);
 

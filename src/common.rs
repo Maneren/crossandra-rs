@@ -18,62 +18,68 @@ const FLOAT_BASE: &str = concat!(
 
 lazy_static! {
     /// A single character enclosed in single quotes (e.g. `'h'`).
-    pub static ref CHAR: (String, String) = ("char".into(), r"'(?:\\'|[^'])'".into());
+    pub static ref CHAR: (&'static str, &'static str) = ("char", r"'(?:\\'|[^'])'");
     /// A string enclosed in single quotes (e.g. `'nice fish'`).
-    pub static ref SINGLE_QUOTED_STRING: (String, String) =
-        ("single_quoted_string".into(), format!("'{STRING_BASE}'"));
+    pub static ref SINGLE_QUOTED_STRING: (&'static str, &'static str) =
+        ("single_quoted_string", format!("'{STRING_BASE}'").leak());
     /// A string enclosed in double quotes (e.g. `"hello there"`).
-    pub static ref DOUBLE_QUOTED_STRING: (String, String) =
-        ("double_quoted_string".into(), format!(r#""{STRING_BASE}""#));
+    pub static ref DOUBLE_QUOTED_STRING: (&'static str, &'static str) =
+        ("double_quoted_string", format!(r#""{STRING_BASE}""#).leak());
     /// An English letter (e.g. `m`). Case insensitive.
-    pub static ref LETTER: (String, String) = ("letter".into(), r"[A-Za-z]".into());
+    pub static ref LETTER: (&'static str, &'static str) = ("letter", r"[A-Za-z]");
     /// An English word (e.g. `thread-safe`). Allows non-consecutive hyphens. Case insensitive.
-    pub static ref WORD: (String, String) = ("word".into(), r"[A-Za-z]+(-[A-Za-z]+)*".into());
+    pub static ref WORD: (&'static str, &'static str) = ("word", r"[A-Za-z]+(-[A-Za-z]+)*");
     /// A C-like variable name (e.g. `crossandra_rocks`). Can consist of
     /// English letters, digits, and underscores. Cannot start with a digit.
-    pub static ref C_NAME: (String, String) = ("c_name".into(), r"[_A-Za-z][_A-Za-z\d]*".into());
+    pub static ref C_NAME: (&'static str, &'static str) = ("c_name", r"[_A-Za-z][_A-Za-z\d]*");
     /// A newline (either `\n` or `\r\n`).
-    pub static ref NEWLINE: (String, String) = ("newline".into(), r"\r?\n".into());
+    pub static ref NEWLINE: (&'static str, &'static str) = ("newline", r"\r?\n");
     /// A single digit (e.g. `7`).
-    pub static ref DIGIT: (String, String) = ("digit".into(), r"[0-9]".into());
+    pub static ref DIGIT: (&'static str, &'static str) = ("digit", r"[0-9]");
     /// A single hexadecimal digit (e.g. `c`). Case insensitive.
-    pub static ref HEXDIGIT: (String, String) = ("hexdigit".into(), r"[0-9A-Fa-f]".into());
+    pub static ref HEXDIGIT: (&'static str, &'static str) = ("hexdigit", r"[0-9A-Fa-f]");
     /// An unsigned integer (e.g. `2_137`). Underscores can be used as separators.
-    pub static ref UNSIGNED_INT: (String, String) = ("unsigned_int".into(), INT_BASE.into());
+    pub static ref UNSIGNED_INT: (&'static str, &'static str) = ("unsigned_int", INT_BASE);
     /// A signed integer (e.g. `-1`). Underscores can be used as separators.
-    pub static ref SIGNED_INT: (String, String) =
-        ("signed_int".into(), format!(r"[+\-]{INT_BASE}"));
+    pub static ref SIGNED_INT: (&'static str, &'static str) =
+        ("signed_int", format!(r"[+\-]{INT_BASE}").leak());
     /// A decimal value (e.g. `3.14`).
-    pub static ref DECIMAL: (String, String) = (
-        "decimal".into(),
-        format!(r"{INT_BASE}\.(?:{INT_BASE})?|\.{INT_BASE}")
+    pub static ref DECIMAL: (&'static str, &'static str) = (
+        "decimal",
+        format!(r"{INT_BASE}\.(?:{INT_BASE})?|\.{INT_BASE}").leak()
     );
     /// An unsigned floating point value (e.g. `1e3`).
-    pub static ref UNSIGNED_FLOAT: (String, String) = ("unsigned_float".into(), FLOAT_BASE.into());
+    pub static ref UNSIGNED_FLOAT: (&'static str, &'static str) = (
+        "unsigned_float",
+        FLOAT_BASE
+    );
     /// A signed floating point value (e.g. `+4.3`).
-    pub static ref SIGNED_FLOAT: (String, String) =
-        ("signed_float".into(), format!(r"[+\-](?:{FLOAT_BASE})"));
+    pub static ref SIGNED_FLOAT: (&'static str, &'static str) =
+        ("signed_float", format!(r"[+\-](?:{FLOAT_BASE})").leak());
     /// A string enclosed in either single or double quotes.
-    pub static ref STRING: (String, String) = (
-        "string".into(),
-        format!(r#""{STRING_BASE}"|'{STRING_BASE}'"#)
+    pub static ref STRING: (&'static str, &'static str) = (
+        "string",
+        format!(r#""{STRING_BASE}"|'{STRING_BASE}'"#).leak()
     );
     /// An unsigned number (either an integer or a float).
-    pub static ref UNSIGNED_NUMBER: (String, String) =
-        ("unsigned_number".into(), format!("{FLOAT_BASE}|{INT_BASE}"));
+    pub static ref UNSIGNED_NUMBER: (&'static str, &'static str) =
+        ("unsigned_number", format!("{FLOAT_BASE}|{INT_BASE}").leak());
     /// A signed number (either an integer or a floating point value).
-    pub static ref SIGNED_NUMBER: (String, String) = (
-        "signed_number".into(),
-        format!(r"[+\-](?:(?:{FLOAT_BASE})|{INT_BASE})")
+    pub static ref SIGNED_NUMBER: (&'static str, &'static str) = (
+        "signed_number",
+        format!(r"[+\-](?:(?:{FLOAT_BASE})|{INT_BASE})").leak()
     );
     /// Any integer value (optional sign).
-    pub static ref INT: (String, String) = ("int".into(), format!(r"[+\-]?{INT_BASE}"));
+    pub static ref INT: (&'static str, &'static str) = ("int", format!(r"[+\-]?{INT_BASE}").leak());
     /// Any floating point value (optional sign).
-    pub static ref FLOAT: (String, String) = ("float".into(), format!(r"[+\-]?(?:{FLOAT_BASE})"));
+    pub static ref FLOAT: (&'static str, &'static str) = (
+        "float",
+        format!(r"[+\-]?(?:{FLOAT_BASE})").leak()
+    );
     /// Any number (optional sign).
-    pub static ref NUMBER: (String, String) = (
-        "number".into(),
-        format!(r"[+\-]?(?:(?:{FLOAT_BASE})|{INT_BASE})")
+    pub static ref NUMBER: (&'static str, &'static str) = (
+        "number",
+        format!(r"[+\-]?(?:(?:{FLOAT_BASE})|{INT_BASE})").leak()
     );
 }
 
@@ -81,9 +87,9 @@ lazy_static! {
 mod tests {
     use crate::{common, error::Error, Tokenizer};
 
-    fn prepare_tokenizer<'a>(pattern: (String, String)) -> Tokenizer<'a> {
+    fn prepare_tokenizer<'a>(pattern: (&'a str, &str)) -> Tokenizer<'a> {
         Tokenizer::default()
-            .with_patterns(vec![pattern])
+            .with_patterns(&[pattern])
             .expect("the pattern should be valid")
     }
 
