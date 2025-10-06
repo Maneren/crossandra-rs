@@ -554,7 +554,7 @@ mod tests {
                 ("mod", "%"),
             ])
             .unwrap()
-            .with_patterns(&[*common::INT])
+            .with_patterns(&[common::INT])
             .unwrap();
 
         for (input, output) in tests {
@@ -571,7 +571,7 @@ mod tests {
     fn line_tokenization() {
         let tok = Tokenizer::default()
             .with_ignore_whitespace(true)
-            .with_patterns(&[*common::WORD])
+            .with_patterns(&[common::WORD])
             .unwrap();
         let Ok(lines) = tok
             .tokenize_lines("a b\nc\rde")
@@ -766,9 +766,7 @@ mod tests {
 
     #[test]
     fn word_tokenization() {
-        let tok = Tokenizer::default()
-            .with_patterns(&[*common::WORD])
-            .unwrap();
+        let tok = Tokenizer::default().with_patterns(&[common::WORD]).unwrap();
         let tokens: Vec<_> = tok.tokenize("Hello, world!").flatten().collect();
         assert_eq!(
             tokens,

@@ -1,5 +1,5 @@
 //! A collection of common patterns for use in tokenizers.
-use lazy_static::lazy_static;
+use const_format::formatcp;
 
 const STRING_BASE: &str = r"(?:\\.|[^\\])*?";
 const INT_BASE: &str = r"[0-9](?:[0-9_]*[0-9])?";
@@ -16,72 +16,62 @@ const FLOAT_BASE: &str = concat!(
     r"(?:[eE][+\-]?[0-9](?:[0-9_]*[0-9])?)?"  // exponent (optional)
 );
 
-lazy_static! {
-    /// A single character enclosed in single quotes (e.g. `'h'`).
-    pub static ref CHAR: (&'static str, &'static str) = ("char", r"'(?:\\'|[^'])'");
-    /// A string enclosed in single quotes (e.g. `'nice fish'`).
-    pub static ref SINGLE_QUOTED_STRING: (&'static str, &'static str) =
-        ("single_quoted_string", format!("'{STRING_BASE}'").leak());
-    /// A string enclosed in double quotes (e.g. `"hello there"`).
-    pub static ref DOUBLE_QUOTED_STRING: (&'static str, &'static str) =
-        ("double_quoted_string", format!(r#""{STRING_BASE}""#).leak());
-    /// An English letter (e.g. `m`). Case insensitive.
-    pub static ref LETTER: (&'static str, &'static str) = ("letter", r"[A-Za-z]");
-    /// An English word (e.g. `thread-safe`). Allows non-consecutive hyphens. Case insensitive.
-    pub static ref WORD: (&'static str, &'static str) = ("word", r"[A-Za-z]+(-[A-Za-z]+)*");
-    /// A C-like variable name (e.g. `crossandra_rocks`). Can consist of
-    /// English letters, digits, and underscores. Cannot start with a digit.
-    pub static ref C_NAME: (&'static str, &'static str) = ("c_name", r"[_A-Za-z][_A-Za-z\d]*");
-    /// A newline (either `\n` or `\r\n`).
-    pub static ref NEWLINE: (&'static str, &'static str) = ("newline", r"\r?\n");
-    /// A single digit (e.g. `7`).
-    pub static ref DIGIT: (&'static str, &'static str) = ("digit", r"[0-9]");
-    /// A single hexadecimal digit (e.g. `c`). Case insensitive.
-    pub static ref HEXDIGIT: (&'static str, &'static str) = ("hexdigit", r"[0-9A-Fa-f]");
-    /// An unsigned integer (e.g. `2_137`). Underscores can be used as separators.
-    pub static ref UNSIGNED_INT: (&'static str, &'static str) = ("unsigned_int", INT_BASE);
-    /// A signed integer (e.g. `-1`). Underscores can be used as separators.
-    pub static ref SIGNED_INT: (&'static str, &'static str) =
-        ("signed_int", format!(r"[+\-]{INT_BASE}").leak());
-    /// A decimal value (e.g. `3.14`).
-    pub static ref DECIMAL: (&'static str, &'static str) = (
-        "decimal",
-        format!(r"{INT_BASE}\.(?:{INT_BASE})?|\.{INT_BASE}").leak()
-    );
-    /// An unsigned floating point value (e.g. `1e3`).
-    pub static ref UNSIGNED_FLOAT: (&'static str, &'static str) = (
-        "unsigned_float",
-        FLOAT_BASE
-    );
-    /// A signed floating point value (e.g. `+4.3`).
-    pub static ref SIGNED_FLOAT: (&'static str, &'static str) =
-        ("signed_float", format!(r"[+\-](?:{FLOAT_BASE})").leak());
-    /// A string enclosed in either single or double quotes.
-    pub static ref STRING: (&'static str, &'static str) = (
-        "string",
-        format!(r#""{STRING_BASE}"|'{STRING_BASE}'"#).leak()
-    );
-    /// An unsigned number (either an integer or a float).
-    pub static ref UNSIGNED_NUMBER: (&'static str, &'static str) =
-        ("unsigned_number", format!("{FLOAT_BASE}|{INT_BASE}").leak());
-    /// A signed number (either an integer or a floating point value).
-    pub static ref SIGNED_NUMBER: (&'static str, &'static str) = (
-        "signed_number",
-        format!(r"[+\-](?:(?:{FLOAT_BASE})|{INT_BASE})").leak()
-    );
-    /// Any integer value (optional sign).
-    pub static ref INT: (&'static str, &'static str) = ("int", format!(r"[+\-]?{INT_BASE}").leak());
-    /// Any floating point value (optional sign).
-    pub static ref FLOAT: (&'static str, &'static str) = (
-        "float",
-        format!(r"[+\-]?(?:{FLOAT_BASE})").leak()
-    );
-    /// Any number (optional sign).
-    pub static ref NUMBER: (&'static str, &'static str) = (
-        "number",
-        format!(r"[+\-]?(?:(?:{FLOAT_BASE})|{INT_BASE})").leak()
-    );
-}
+/// A single character enclosed in single quotes (e.g. `'h'`).
+pub static CHAR: (&str, &str) = ("char", r"'(?:\\'|[^'])'");
+/// A string enclosed in single quotes (e.g. `'nice fish'`).
+pub static SINGLE_QUOTED_STRING: (&str, &str) =
+    ("single_quoted_string", formatcp!("'{}'", STRING_BASE));
+/// A string enclosed in double quotes (e.g. `"hello there"`).
+pub static DOUBLE_QUOTED_STRING: (&str, &str) =
+    ("double_quoted_string", formatcp!("\"{}\"", STRING_BASE));
+/// An English letter (e.g. `m`). Case insensitive.
+pub static LETTER: (&str, &str) = ("letter", r"[A-Za-z]");
+/// An English word (e.g. `thread-safe`). Allows non-consecutive hyphens. Case insensitive.
+pub static WORD: (&str, &str) = ("word", r"[A-Za-z]+(-[A-Za-z]+)*");
+/// A C-like variable name (e.g. `crossandra_rocks`). Can consist of
+/// English letters, digits, and underscores. Cannot start with a digit.
+pub static C_NAME: (&str, &str) = ("c_name", r"[_A-Za-z][_A-Za-z\d]*");
+/// A newline (either `\n` or `\r\n`).
+pub static NEWLINE: (&str, &str) = ("newline", r"\r?\n");
+/// A single digit (e.g. `7`).
+pub static DIGIT: (&str, &str) = ("digit", r"[0-9]");
+/// A single hexadecimal digit (e.g. `c`). Case insensitive.
+pub static HEXDIGIT: (&str, &str) = ("hexdigit", r"[0-9A-Fa-f]");
+/// An unsigned integer (e.g. `2_137`). Underscores can be used as separators.
+pub static UNSIGNED_INT: (&str, &str) = ("unsigned_int", INT_BASE);
+/// A signed integer (e.g. `-1`). Underscores can be used as separators.
+pub static SIGNED_INT: (&str, &str) = ("signed_int", formatcp!("[+\\-]{}", INT_BASE));
+/// A decimal value (e.g. `3.14`).
+pub static DECIMAL: (&str, &str) = (
+    "decimal",
+    formatcp!("{}\\.(?:{})?|\\.{}", INT_BASE, INT_BASE, INT_BASE),
+);
+/// An unsigned floating point value (e.g. `1e3`).
+pub static UNSIGNED_FLOAT: (&str, &str) = ("unsigned_float", FLOAT_BASE);
+/// A signed floating point value (e.g. `+4.3`).
+pub static SIGNED_FLOAT: (&str, &str) = ("signed_float", formatcp!("[+\\-](?:{})", FLOAT_BASE));
+/// A string enclosed in either single or double quotes.
+pub static STRING: (&str, &str) = (
+    "string",
+    formatcp!("\"{}\"|\\'{}\'", STRING_BASE, STRING_BASE),
+);
+/// An unsigned number (either an integer or a float).
+pub static UNSIGNED_NUMBER: (&str, &str) =
+    ("unsigned_number", formatcp!("{}|{}", FLOAT_BASE, INT_BASE));
+/// A signed number (either an integer or a floating point value).
+pub static SIGNED_NUMBER: (&str, &str) = (
+    "signed_number",
+    formatcp!("[+\\-](?:(?:{})|{})", FLOAT_BASE, INT_BASE),
+);
+/// Any integer value (optional sign).
+pub static INT: (&str, &str) = ("int", formatcp!("[+\\-]?{}", INT_BASE));
+/// Any floating point value (optional sign).
+pub static FLOAT: (&str, &str) = ("float", formatcp!("[+\\-]?(?:{})", FLOAT_BASE));
+/// Any number (optional sign).
+pub static NUMBER: (&str, &str) = (
+    "number",
+    formatcp!("[+\\-]?(?:(?:{})|{})", FLOAT_BASE, INT_BASE),
+);
 
 #[cfg(test)]
 mod tests {
@@ -92,7 +82,6 @@ mod tests {
             .with_patterns(&[pattern])
             .expect("the pattern should be valid")
     }
-
     type TestOutcome<'a> = Result<Vec<&'a str>, (char, usize)>;
 
     fn test_patterns(tokenizer: &Tokenizer<'_>, tests: Vec<(&str, TestOutcome)>) {
@@ -123,7 +112,7 @@ mod tests {
     #[test]
     fn single_quoted_string() {
         test_patterns(
-            &prepare_tokenizer(common::SINGLE_QUOTED_STRING.clone()),
+            &prepare_tokenizer(common::SINGLE_QUOTED_STRING),
             vec![
                 ("'test'", Ok(vec!["'test'"])),
                 ("'''", Err(('\'', 2))),
@@ -141,7 +130,7 @@ mod tests {
     #[test]
     fn double_quoted_string() {
         test_patterns(
-            &prepare_tokenizer(common::DOUBLE_QUOTED_STRING.clone()),
+            &prepare_tokenizer(common::DOUBLE_QUOTED_STRING),
             vec![
                 ("\"test\"", Ok(vec!["\"test\""])),
                 ("\"\"\"", Err(('"', 2))),
@@ -159,7 +148,7 @@ mod tests {
     #[test]
     fn string() {
         test_patterns(
-            &prepare_tokenizer(common::STRING.clone()),
+            &prepare_tokenizer(common::STRING),
             vec![("'test'\"test\"", Ok(vec!["'test'", "\"test\""]))],
         );
     }
@@ -167,7 +156,7 @@ mod tests {
     #[test]
     fn char() {
         test_patterns(
-            &prepare_tokenizer(common::CHAR.clone()),
+            &prepare_tokenizer(common::CHAR),
             vec![
                 ("'t'", Ok(vec!["'t'"])),
                 ("'''", Err(('\'', 0))),
@@ -186,7 +175,7 @@ mod tests {
     #[test]
     fn letter() {
         test_patterns(
-            &prepare_tokenizer(common::LETTER.clone()),
+            &prepare_tokenizer(common::LETTER),
             vec![
                 ("AZaz", Ok(vec!["A", "Z", "a", "z"])),
                 ("Wow!", Err(('!', 3))),
@@ -200,7 +189,7 @@ mod tests {
     #[test]
     fn word() {
         test_patterns(
-            &prepare_tokenizer(common::WORD.clone()),
+            &prepare_tokenizer(common::WORD),
             vec![
                 ("A", Ok(vec!["A"])),
                 ("word", Ok(vec!["word"])),
@@ -221,7 +210,7 @@ mod tests {
     #[test]
     fn digit() {
         test_patterns(
-            &prepare_tokenizer(common::DIGIT.clone()),
+            &prepare_tokenizer(common::DIGIT),
             vec![
                 (
                     "0123456789",
@@ -237,7 +226,7 @@ mod tests {
     #[test]
     fn unsigned_int() {
         test_patterns(
-            &prepare_tokenizer(common::UNSIGNED_INT.clone()),
+            &prepare_tokenizer(common::UNSIGNED_INT),
             vec![
                 ("21", Ok(vec!["21"])),
                 ("037", Ok(vec!["037"])),
@@ -250,7 +239,7 @@ mod tests {
     #[test]
     fn signed_int() {
         test_patterns(
-            &prepare_tokenizer(common::SIGNED_INT.clone()),
+            &prepare_tokenizer(common::SIGNED_INT),
             vec![
                 ("+21", Ok(vec!["+21"])),
                 ("-37", Ok(vec!["-37"])),
@@ -263,7 +252,7 @@ mod tests {
     #[test]
     fn decimal() {
         test_patterns(
-            &prepare_tokenizer(common::DECIMAL.clone()),
+            &prepare_tokenizer(common::DECIMAL),
             vec![
                 ("3.14", Ok(vec!["3.14"])),
                 ("3.0", Ok(vec!["3.0"])),
@@ -285,7 +274,7 @@ mod tests {
     #[test]
     fn hexdigit() {
         test_patterns(
-            &prepare_tokenizer(common::HEXDIGIT.clone()),
+            &prepare_tokenizer(common::HEXDIGIT),
             vec![
                 ("3Da", Ok(vec!["3", "D", "a"])),
                 ("0x", Err(('x', 1))),
@@ -297,7 +286,7 @@ mod tests {
     #[test]
     fn c_name() {
         test_patterns(
-            &prepare_tokenizer(common::C_NAME.clone()),
+            &prepare_tokenizer(common::C_NAME),
             vec![
                 ("W", Ok(vec!["W"])),
                 ("_", Ok(vec!["_"])),
@@ -319,7 +308,7 @@ mod tests {
     #[test]
     fn newline() {
         test_patterns(
-            &prepare_tokenizer(common::NEWLINE.clone()),
+            &prepare_tokenizer(common::NEWLINE),
             vec![
                 ("\n", Ok(vec!["\n"])),
                 ("\r\n", Ok(vec!["\r\n"])),
@@ -332,7 +321,7 @@ mod tests {
     #[test]
     fn unsigned_float() {
         test_patterns(
-            &prepare_tokenizer(common::UNSIGNED_FLOAT.clone()),
+            &prepare_tokenizer(common::UNSIGNED_FLOAT),
             vec![
                 ("13", Err(('1', 0))),
                 ("13.", Ok(vec!["13."])),
@@ -356,7 +345,7 @@ mod tests {
     #[test]
     fn signed_float() {
         test_patterns(
-            &prepare_tokenizer(common::SIGNED_FLOAT.clone()),
+            &prepare_tokenizer(common::SIGNED_FLOAT),
             vec![
                 ("+1", Err(('+', 0))),
                 ("+1e3", Ok(vec!["+1e3"])),
@@ -378,7 +367,7 @@ mod tests {
     #[test]
     fn unsigned_number() {
         test_patterns(
-            &prepare_tokenizer(common::UNSIGNED_NUMBER.clone()),
+            &prepare_tokenizer(common::UNSIGNED_NUMBER),
             vec![
                 ("1", Ok(vec!["1"])),
                 ("1.0", Ok(vec!["1.0"])),
@@ -390,7 +379,7 @@ mod tests {
     #[test]
     fn signed_number() {
         test_patterns(
-            &prepare_tokenizer(common::SIGNED_NUMBER.clone()),
+            &prepare_tokenizer(common::SIGNED_NUMBER),
             vec![
                 ("+1", Ok(vec!["+1"])),
                 ("+1_0", Ok(vec!["+1_0"])),
@@ -404,7 +393,7 @@ mod tests {
     #[test]
     fn int() {
         test_patterns(
-            &prepare_tokenizer(common::INT.clone()),
+            &prepare_tokenizer(common::INT),
             vec![(
                 "10+200-3000-4_000",
                 Ok(vec!["10", "+200", "-3000", "-4_000"]),
@@ -415,7 +404,7 @@ mod tests {
     #[test]
     fn float() {
         test_patterns(
-            &prepare_tokenizer(common::FLOAT.clone()),
+            &prepare_tokenizer(common::FLOAT),
             vec![
                 ("8_192.8_3-77641702.4", Ok(vec!["8_192.8_3", "-77641702.4"])),
                 ("8.83-77641702.4", Ok(vec!["8.83", "-77641702.4"])),
@@ -432,7 +421,7 @@ mod tests {
     #[test]
     fn number() {
         test_patterns(
-            &prepare_tokenizer(common::NUMBER.clone()),
+            &prepare_tokenizer(common::NUMBER),
             vec![
                 ("+8_192.8_3", Ok(vec!["+8_192.8_3"])),
                 ("45692.+3795+74-e35.+", Err(('-', 14))),

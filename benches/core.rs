@@ -87,7 +87,7 @@ pub fn samarium(c: &mut Criterion) {
         ("z", "><"),
     ];
     let patterns = [
-        *common::DOUBLE_QUOTED_STRING,
+        common::DOUBLE_QUOTED_STRING,
         ("number", r"[\\/]+`?[\\/]*|`[\\/]*"),
         ("block_comment", r"==<[^>]*>=="),
         ("line_comment", r"==[^\n]*"),
