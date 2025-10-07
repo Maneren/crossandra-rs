@@ -17,58 +17,58 @@ const FLOAT_BASE: &str = concat!(
 );
 
 /// A single character enclosed in single quotes (e.g. `'h'`).
-pub static CHAR: (&str, &str) = ("char", r"'(?:\\'|[^'])'");
+pub const CHAR: (&str, &str) = ("char", r"'(?:\\'|[^'])'");
 /// A string enclosed in single quotes (e.g. `'nice fish'`).
-pub static SINGLE_QUOTED_STRING: (&str, &str) =
+pub const SINGLE_QUOTED_STRING: (&str, &str) =
     ("single_quoted_string", formatcp!("'{}'", STRING_BASE));
 /// A string enclosed in double quotes (e.g. `"hello there"`).
-pub static DOUBLE_QUOTED_STRING: (&str, &str) =
+pub const DOUBLE_QUOTED_STRING: (&str, &str) =
     ("double_quoted_string", formatcp!("\"{}\"", STRING_BASE));
 /// An English letter (e.g. `m`). Case insensitive.
-pub static LETTER: (&str, &str) = ("letter", r"[A-Za-z]");
+pub const LETTER: (&str, &str) = ("letter", r"[A-Za-z]");
 /// An English word (e.g. `thread-safe`). Allows non-consecutive hyphens. Case insensitive.
-pub static WORD: (&str, &str) = ("word", r"[A-Za-z]+(-[A-Za-z]+)*");
+pub const WORD: (&str, &str) = ("word", r"[A-Za-z]+(-[A-Za-z]+)*");
 /// A C-like variable name (e.g. `crossandra_rocks`). Can consist of
 /// English letters, digits, and underscores. Cannot start with a digit.
-pub static C_NAME: (&str, &str) = ("c_name", r"[_A-Za-z][_A-Za-z\d]*");
+pub const C_NAME: (&str, &str) = ("c_name", r"[_A-Za-z][_A-Za-z\d]*");
 /// A newline (either `\n` or `\r\n`).
-pub static NEWLINE: (&str, &str) = ("newline", r"\r?\n");
+pub const NEWLINE: (&str, &str) = ("newline", r"\r?\n");
 /// A single digit (e.g. `7`).
-pub static DIGIT: (&str, &str) = ("digit", r"[0-9]");
+pub const DIGIT: (&str, &str) = ("digit", r"[0-9]");
 /// A single hexadecimal digit (e.g. `c`). Case insensitive.
-pub static HEXDIGIT: (&str, &str) = ("hexdigit", r"[0-9A-Fa-f]");
+pub const HEXDIGIT: (&str, &str) = ("hexdigit", r"[0-9A-Fa-f]");
 /// An unsigned integer (e.g. `2_137`). Underscores can be used as separators.
-pub static UNSIGNED_INT: (&str, &str) = ("unsigned_int", INT_BASE);
+pub const UNSIGNED_INT: (&str, &str) = ("unsigned_int", INT_BASE);
 /// A signed integer (e.g. `-1`). Underscores can be used as separators.
-pub static SIGNED_INT: (&str, &str) = ("signed_int", formatcp!("[+\\-]{}", INT_BASE));
+pub const SIGNED_INT: (&str, &str) = ("signed_int", formatcp!("[+\\-]{}", INT_BASE));
 /// A decimal value (e.g. `3.14`).
-pub static DECIMAL: (&str, &str) = (
+pub const DECIMAL: (&str, &str) = (
     "decimal",
     formatcp!("{}\\.(?:{})?|\\.{}", INT_BASE, INT_BASE, INT_BASE),
 );
 /// An unsigned floating point value (e.g. `1e3`).
-pub static UNSIGNED_FLOAT: (&str, &str) = ("unsigned_float", FLOAT_BASE);
+pub const UNSIGNED_FLOAT: (&str, &str) = ("unsigned_float", FLOAT_BASE);
 /// A signed floating point value (e.g. `+4.3`).
-pub static SIGNED_FLOAT: (&str, &str) = ("signed_float", formatcp!("[+\\-](?:{})", FLOAT_BASE));
+pub const SIGNED_FLOAT: (&str, &str) = ("signed_float", formatcp!("[+\\-](?:{})", FLOAT_BASE));
 /// A string enclosed in either single or double quotes.
-pub static STRING: (&str, &str) = (
+pub const STRING: (&str, &str) = (
     "string",
     formatcp!("\"{}\"|\\'{}\'", STRING_BASE, STRING_BASE),
 );
 /// An unsigned number (either an integer or a float).
-pub static UNSIGNED_NUMBER: (&str, &str) =
+pub const UNSIGNED_NUMBER: (&str, &str) =
     ("unsigned_number", formatcp!("{}|{}", FLOAT_BASE, INT_BASE));
 /// A signed number (either an integer or a floating point value).
-pub static SIGNED_NUMBER: (&str, &str) = (
+pub const SIGNED_NUMBER: (&str, &str) = (
     "signed_number",
     formatcp!("[+\\-](?:(?:{})|{})", FLOAT_BASE, INT_BASE),
 );
 /// Any integer value (optional sign).
-pub static INT: (&str, &str) = ("int", formatcp!("[+\\-]?{}", INT_BASE));
+pub const INT: (&str, &str) = ("int", formatcp!("[+\\-]?{}", INT_BASE));
 /// Any floating point value (optional sign).
-pub static FLOAT: (&str, &str) = ("float", formatcp!("[+\\-]?(?:{})", FLOAT_BASE));
+pub const FLOAT: (&str, &str) = ("float", formatcp!("[+\\-]?(?:{})", FLOAT_BASE));
 /// Any number (optional sign).
-pub static NUMBER: (&str, &str) = (
+pub const NUMBER: (&str, &str) = (
     "number",
     formatcp!("[+\\-]?(?:(?:{})|{})", FLOAT_BASE, INT_BASE),
 );
